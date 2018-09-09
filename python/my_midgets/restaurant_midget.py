@@ -16,7 +16,7 @@ class RestaurantMidget(Midget):
     TIME_CLASS="_1fnMkC-s"
 
     def __init__(self):
-        self.super.__init__()
+        super().__init__()
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(5)
 

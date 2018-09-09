@@ -9,7 +9,7 @@ class PingMidget(Midget):
     ACCOUNT = "midgetping@gmail.com"
 
     def __init__(self):
-        self.super.__init__()
+        super().__init__()
 
     def ping(self, to):
         msg = MIMEMultipart()
@@ -24,3 +24,7 @@ class PingMidget(Midget):
         s = smtplib.SMTP_SSL('smtp.gmail.com')
         s.login(self.ACCOUNT, GMAIL_PASSWORD)
         s.sendmail(self.ACCOUNT, to, msg.as_string())
+
+if __name__ == "__main__":
+    pinger = PingMidget()
+    pinger.ping("TEST@gmail.com")
