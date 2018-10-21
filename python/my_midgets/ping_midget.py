@@ -11,13 +11,13 @@ class PingMidget(Midget):
     def __init__(self):
         super().__init__()
 
-    def ping(self, to):
+    def ping(self, to, message=None):
         msg = MIMEMultipart()
         msg["From"] = self.ACCOUNT
         msg["To"] = to
         msg["Subject"] = "Ping!"
 
-        html = '<html><body><p>Hi, I have the following alerts for you!</p></body></html>'
+        html = '<html><body><p>Hi, I have the following alerts for you!</p><h1>{}</h1></body></html>'.format(message if message is not None else "")
         body = MIMEText(html, 'html')
 
         msg.attach(body)
