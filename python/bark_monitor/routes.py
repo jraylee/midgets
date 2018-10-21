@@ -3,10 +3,13 @@ import os
 import numpy as np
 from time import time
 from flask import make_response, render_template, send_from_directory
-
+from my_midgets.bark_midget import BarkMidget
 from bark_monitor import app
 
-n = 5
+bark_midget = BarkMidget()
+bark_midget.start()
+
+n = 1
 @app.route("/")
 @app.route("/index")
 def index():
@@ -14,15 +17,11 @@ def index():
 
 @app.route("/live-data")
 def live_data():
-    times = np.arange(n) * 1000/n
-    times += time() * 1000
-    data = np.random.random(n)*100
-    package_data = list(zip([list(times), list(data)]))
-    response = make_response(json.dumps(package_data))
+    data = [time() * 1000, max(list(bark_midget.frames)[-100:])]
+    response = make_response(json.dumps(data))
     response.content_type = "application/json"
-    print(package_data)
+    print(data)
     return response
-
 
 @app.route('/js/<path:filename>')
 def serve_static(filename):

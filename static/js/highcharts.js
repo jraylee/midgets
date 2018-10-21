@@ -9,15 +9,20 @@ function requestData() {
         url: '/live-data',
         success: function(points) {
             var series = chart.series[0],
-                shift = series.data.length > 20; // shift if the series is
+                shift = series.data.length > 200; // shift if the series is
                                                  // longer than 20
-            console.log(points);
+//            console.log(points);
+//            // add the point
+//            for (i=0; i < points[0][0].length; i++) {
+//                point = {x:points[0][0][i], y:points[1][0][i]};
+//                console.log(point);
+//                chart.series[0].addPoint(point, true, shift);
+//            }
             // add the point
-//            for (i=0; i< point)
-//            chart.series[0].addPoint(point, true, shift);
+            chart.series[0].addPoint(points, true, shift);
 
             // call it again after one second
-//            setTimeout(requestData, 1000);
+            setTimeout(requestData, 100);
         },
         cache: false
     });
@@ -29,6 +34,7 @@ $(document).ready(function() {
         chart: {
             renderTo: 'data-container',
             defaultSeriesType: 'spline',
+            animation: false,
             events: {
                 load: requestData
             }
@@ -37,9 +43,12 @@ $(document).ready(function() {
             text: 'Live random data'
         },
         xAxis: {
-            type: 'Time',
+            type: 'datetime',
             tickPixelInterval: 150,
-            maxZoom: 20 * 1000
+            maxZoom: 20 * 1000,
+            title: {
+                text: 'Time'
+            }
         },
         yAxis: {
             minPadding: 0.2,
@@ -47,11 +56,18 @@ $(document).ready(function() {
             title: {
                 text: 'Volume',
                 margin: 80
-            }
+            },
+            min: 0,
+            max: 1000,
         },
         series: [{
             name: 'Random data',
             data: []
-        }]
+        }],
+        plotOptions: {
+            line: {
+                animation: false,
+            }
+        }
     });
 });

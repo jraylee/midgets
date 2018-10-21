@@ -5,7 +5,6 @@ import pyaudio
 from scipy import signal
 from my_midgets.midget import Midget
 
-
 plt.ion()
 
 
@@ -25,22 +24,17 @@ class BarkMidget(Midget):
                                         rate=self.RATE,
                                         input=True,
                                         frames_per_buffer=self.CHUNK)
+        
+        self.frames = deque(maxlen=(self.RATE * self.FRAME_SIZE))
 
-    def listen(self, duration=100):
-        frames = deque(maxlen=(self.RATE * self.FRAME_SIZE))
+    def listen(self):
         num_peaks = 0
-        for _ in range(0, int(self.RATE / self.CHUNK * duration)):
+        while True:
             raw_data = self.stream.read(self.CHUNK)
             data = np.fromstring(raw_data, dtype=np.int16)
             data = signal.decimate(data, self.DOWNSAMPLE_FACTOR)
             num_peaks += len(signal.find_peaks(data, threshold=20000))
-            frames.extend(list(data))
-            plt.clf()
-            plt.plot(frames)
-            plt.pause(0.01)
-        print(num_peaks)
-
-
-
-
-BarkMidget().listen()
+            self.frames.extend(list(data))
+            
+    def run(self):
+        self.listen()
